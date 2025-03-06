@@ -2,18 +2,19 @@ package trivia;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 // REFACTOR ME
 public class Game implements IGame {
-   ArrayList players = new ArrayList();
+   List<String> players = new ArrayList<>();
    int[] places = new int[6];
    int[] purses = new int[6];
    boolean[] inPenaltyBox = new boolean[6];
 
-   LinkedList popQuestions = new LinkedList();
-   LinkedList scienceQuestions = new LinkedList();
-   LinkedList sportsQuestions = new LinkedList();
-   LinkedList rockQuestions = new LinkedList();
+   LinkedList<String> popQuestions = new LinkedList<>();
+   LinkedList<String> scienceQuestions = new LinkedList<>();
+   LinkedList<String> sportsQuestions = new LinkedList<>();
+   LinkedList<String> rockQuestions = new LinkedList<>();
 
    int currentPlayer = 0;
    boolean isGettingOutOfPenaltyBox;
@@ -29,10 +30,6 @@ public class Game implements IGame {
 
    public String createRockQuestion(int index) {
       return "Rock Question " + index;
-   }
-
-   public boolean isPlayable() {
-      return (howManyPlayers() >= 2);
    }
 
    public boolean add(String playerName) {
@@ -75,7 +72,7 @@ public class Game implements IGame {
       } else {
 
          places[currentPlayer] = places[currentPlayer] + roll;
-         if (places[currentPlayer] > 12) places[currentPlayer] = places[currentPlayer] - 12;
+         if (places[currentPlayer] >= 12) places[currentPlayer] = places[currentPlayer] - 12;
 
          System.out.println(players.get(currentPlayer)
                             + "'s new location is "
@@ -86,14 +83,33 @@ public class Game implements IGame {
 
    }
 
+   /**
+    * //exemple de refacto
+    * enum Categories{
+    *     //POP,
+    *     //SCIENCE,
+    *     //SPORTS,
+    *     //ROCK
+    *
+    * private final String stringValue;
+    *
+    *    Categories(final String s) {
+    *         stringValue = new String(s);
+    *     }
+    *     public String toString() {
+    *         return stringValue;
+    *     }
+    * }
+    */
+
    private void askQuestion() {
-      if (currentCategory() == "Pop")
+      if (currentCategory().equals("Pop"))
          System.out.println(popQuestions.removeFirst());
-      if (currentCategory() == "Science")
+      if (currentCategory().equals("Science"))
          System.out.println(scienceQuestions.removeFirst());
-      if (currentCategory() == "Sports")
+      if (currentCategory().equals("Sports"))
          System.out.println(sportsQuestions.removeFirst());
-      if (currentCategory() == "Rock")
+      if (currentCategory().equals("Rock"))
          System.out.println(rockQuestions.removeFirst());
    }
 
@@ -114,7 +130,7 @@ public class Game implements IGame {
    public boolean handleCorrectAnswer() {
       if (inPenaltyBox[currentPlayer]) {
          if (isGettingOutOfPenaltyBox) {
-            System.out.println("Answer was corrent!!!!");
+            System.out.println("Answer was correct!!!!");
             purses[currentPlayer]++;
             System.out.println(players.get(currentPlayer)
                                + " now has "
@@ -135,7 +151,7 @@ public class Game implements IGame {
 
       } else {
 
-         System.out.println("Answer was corrent!!!!");
+         System.out.println("Answer was correct!!!!");
          purses[currentPlayer]++;
          System.out.println(players.get(currentPlayer)
                             + " now has "
