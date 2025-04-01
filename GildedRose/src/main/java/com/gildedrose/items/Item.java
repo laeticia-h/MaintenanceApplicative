@@ -1,12 +1,9 @@
-package com.gildedrose;
-
+package com.gildedrose.items;
 
 import items.AgedBrie;
 import items.Conjured;
 import items.DefaultItem;
 import items.Sulfuras;
-import items.BackstagePass;
-
 
 public abstract class Item {
 
