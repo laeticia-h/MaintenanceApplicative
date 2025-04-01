@@ -30,6 +30,8 @@ public class Event {
             desc = "Réunion : " + title + " à " + lieu + " avec " + participants;
         } else if (type.equals("PERIODIQUE")) {
             desc = "Événement périodique : " + title + " tous les " + frequenceJours + " jours";
+        }else if (type.equals("ENTRETIEN")) {
+            desc = "Entretien : " + title;
         }
         return desc;
     }
