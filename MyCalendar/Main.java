@@ -92,6 +92,7 @@ public class Main {
                 System.out.println("3 - Ajouter une réunion");
                 System.out.println("4 - Ajouter un évènement périodique");
                 System.out.println("5 - Se déconnecter");
+                System.out.println("6 - Supprimer un événement");
                 System.out.print("Votre choix : ");
 
                 String choix = scanner.nextLine();
@@ -174,9 +175,13 @@ public class Main {
                         System.out.print("Durée (en minutes) : ");
                         int duree = Integer.parseInt(scanner.nextLine());
 
-                        calendar.ajouterEvent("RDV_PERSONNEL", titre, utilisateur,
-                                LocalDateTime.of(annee, moisRdv, jourRdv, heure, minute), duree,
-                                "", "", 0);
+                        calendar.ajouterRdv(
+                                new TitreEvenement(titre),
+                                new Proprietaire(utilisateur),
+                                new DateEvenement(LocalDateTime.of(annee, moisRdv, jourRdv, heure, minute)),
+                                new DureeEvenement(duree),
+                                new EventId("1")
+                        );
 
                         System.out.println("Événement ajouté.");
                         break;
@@ -209,10 +214,16 @@ public class Main {
                             System.out.print("Participants : " + participants);
                             participants += ", " + scanner.nextLine();
                         }
+                        calendar.ajouterReunion(
+                                new TitreEvenement(titre2),
+                                new Proprietaire(utilisateur),
+                                new DateEvenement(LocalDateTime.of(annee2, moisRdv2, jourRdv2, heure2, minute2)),
+                                new DureeEvenement(duree2),
+                                new LieuEvenement(lieu),
+                                new Participants(participants),
+                                new EventId("1")
+                        );
 
-                        calendar.ajouterEvent("REUNION", titre2, utilisateur,
-                                LocalDateTime.of(annee2, moisRdv2, jourRdv2, heure2, minute2), duree2,
-                                lieu, participants, 0);
 
                         System.out.println("Événement ajouté.");
                         break;
@@ -234,12 +245,28 @@ public class Main {
                         System.out.print("Frequence (en jours) : ");
                         int frequence = Integer.parseInt(scanner.nextLine());
 
-                        calendar.ajouterEvent("PERIODIQUE", titre3, utilisateur,
-                                LocalDateTime.of(annee3, moisRdv3, jourRdv3, heure3, minute3), 0,
-                                "", "", frequence);
+                            calendar.ajouterPeriodique(
+                                    new TitreEvenement(titre3),
+                                    new Proprietaire(utilisateur),
+                                    new DateEvenement(LocalDateTime.of(annee3, moisRdv3, jourRdv3, heure3, minute3)),
+                                    new DureeEvenement(30),
+                                    new FrequenceEvenement(frequence),
+                                    new EventId("1")
+                            );
 
                         System.out.println("Événement ajouté.");
                         break;
+                    case "6":
+                        System.out.println("Liste des événements avec ID :");
+                        for (Event e : calendar.getEvents()) {
+                            System.out.println("- " + e.description() + " | ID : " + e.getId());
+                        }
+                        System.out.print("Entrez l'ID de l'événement à supprimer : ");
+                        String idASupprimer = scanner.nextLine().trim();
+                        calendar.supprimerParId(new EventId(idASupprimer));
+                        System.out.println("Suppression effectuée (si ID trouvé).");
+                        break;
+
 
                     default:
                         System.out.println("Déconnexion ! Voulez-vous continuer ? (O/N)");

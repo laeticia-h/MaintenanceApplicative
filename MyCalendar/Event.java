@@ -1,38 +1,44 @@
-import java.time.LocalDateTime;
+import java.util.List;
 
-public class Event {
-    public String type; // "RDV_PERSONNEL", "REUNION", "PERIODIQUE"
-    public String title;
-    public String proprietaire;
-    public LocalDateTime dateDebut;
-    public int dureeMinutes;
-    public String lieu; // utilisé seulement pour REUNION
-    public String participants; // séparés par virgules (pour REUNION uniquement)
-    public int frequenceJours; // uniquement pour PERIODIQUE
+public abstract class Event {
+    protected TitreEvenement titre;
+    protected Proprietaire proprietaire;
+    protected DateEvenement debut;
+    protected DureeEvenement duree;
+    protected EventId id;
 
-    public Event(String type, String title, String proprietaire, LocalDateTime dateDebut, int dureeMinutes,
-                 String lieu, String participants, int frequenceJours) {
-        this.type = type;
-        this.title = title;
+    public Event(TitreEvenement titre, Proprietaire proprietaire, DateEvenement debut, DureeEvenement duree, EventId id) {
+        this.titre = titre;
         this.proprietaire = proprietaire;
-        this.dateDebut = dateDebut;
-        this.dureeMinutes = dureeMinutes;
-        this.lieu = lieu;
-        this.participants = participants;
-        this.frequenceJours = frequenceJours;
+        this.debut = debut;
+        this.duree = duree;
+        this.id = new EventId();
+
     }
 
-    public String description() {
-        String desc = "";
-        if (type.equals("RDV_PERSONNEL")) {
-            desc = "RDV : " + title + " à " + dateDebut.toString();
-        } else if (type.equals("REUNION")) {
-            desc = "Réunion : " + title + " à " + lieu + " avec " + participants;
-        } else if (type.equals("PERIODIQUE")) {
-            desc = "Événement périodique : " + title + " tous les " + frequenceJours + " jours";
-        }else if (type.equals("ENTRETIEN")) {
-            desc = "Entretien : " + title;
-        }
-        return desc;
+    public abstract String description();
+
+    public DateEvenement getDebut() {
+        return debut;
     }
+
+    public DureeEvenement getDuree() {
+        return duree;
+    }
+
+    public DateEvenement getFin() {
+        return debut.plusMinutes(duree.enMinutes());
+    }
+
+    public boolean enConflitAvec(Event autre) {
+        return debut.estEntre(autre.getDebut(), autre.getFin())
+                || getFin().estEntre(autre.getDebut(), autre.getFin());
+    }
+
+    public abstract List<Event> occurrencesDansPeriode(DateEvenement debut, DateEvenement fin);
+
+    public EventId getId() {
+        return id;
+    }
+
 }
